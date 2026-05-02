@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Analyzer | By Rakib Bae</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #00ffcc;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background-image: radial-gradient(circle, #0a1a10 0%, #000000 100%);
+        }
+        .container {
+            background: rgba(10, 25, 15, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #00ffcc;
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+        p {
+            color: #55aa88;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        input[type="email"] {
+            width: 85%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #005544;
+            color: #00ffcc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+        }
+        button {
+            background: transparent;
+            color: #00ffcc;
+            border: 2px solid #00ffcc;
+            padding: 10px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        button:hover {
+            background: #00ffcc;
+            color: #000;
+            box-shadow: 0 0 20px #00ffcc;
+        }
+        .terminal {
+            margin-top: 20px;
+            background: #000;
+            border: 1px solid #00ffcc;
+            padding: 15px;
+            border-radius: 5px;
+            height: 180px;
+            overflow-y: auto;
+            text-align: left;
+            font-size: 13px;
+            color: #00ffcc;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            box-shadow: inset 0 0 10px #00ffcc33;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #336655;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OSINT Analyzer</h1>
+        <p>Advanced Digital Footprint Tracker</p>
+        
+        <input type="email" id="targetEmail" placeholder="Enter Target Email...">
+        <button id="scanBtn">Initiate Scan</button>
+        
+        <div class="terminal" id="outputBox">System Ready... Waiting for target.</div>
+        
+        <div class="footer">Developed by Rakib Bae | System Ready</div>
+    </div>
+
+    <!-- হাগিং ফেসের এপিআই কানেকশন স্ক্রিপ্ট -->
+    <script type="module">
+        import { client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
+
+        document.getElementById('scanBtn').addEventListener('click', async () => {
+            const emailInput = document.getElementById('targetEmail').value;
+            const outputBox = document.getElementById('outputBox');
+            const btn = document.getElementById('scanBtn');
+
+            if(!emailInput) {
+                outputBox.innerText = "[-] Error: Target email is missing!";
+                return;
+            }
+
+            outputBox.innerText = "[*] Initiating scan protocol...\n[*] Connecting to Hugging Face Mainframe...\n[*] Hunting data for: " + emailInput + "\n\n(Please wait 5-10 seconds...)";
+            btn.innerText = "Scanning...";
+            btn.disabled = true;
+
+            try {
+                // তোর স্পেসের নাম দিয়ে ডাইরেক্ট কল হচ্ছে
+                const app = await client("Rakibgg/osint-backend");
+                const result = await app.predict("/predict", [emailInput]);
+                
+                outputBox.innerText = result.data[0];
+            } catch (error) {
+                outputBox.innerText = "[-] Connection Failed! সার্ভারে কানেক্ট করা যাচ্ছে না।\nDetails: " + error.message;
+            }
+
+            btn.innerText = "Initiate Scan";
+            btn.disabled = false;
+        });
+    </script>
+</body>
+</html>

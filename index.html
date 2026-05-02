@@ -49,7 +49,7 @@
         <div id="chat-box" class="flex-1 p-4 overflow-y-auto custom-scrollbar flex flex-col space-y-4">
             <div class="ai-msg p-3 rounded-lg self-start max-w-[85%] text-sm shadow-sm leading-relaxed">
                 [+] Neural link established.<br>
-                [+] Agent Router connected securely.<br>
+                [+] Ghost Proxy connected securely.<br>
                 [+] Awaiting your command sequence...
             </div>
         </div>
@@ -80,11 +80,11 @@
         // Your Secret API Key
         const API_KEY = 'sk-HZkaiZ8fBlKhr15wSUa8ROJXeQS6A32FHZt2HA0VCUhmoaNf'; 
         
-        // Exact Agent Router Endpoint
-        const API_URL = 'https://agentrouter.org/v1/chat/completions'; 
+        // Ghost Proxy URL (Direct to Vercel API folder)
+        const API_URL = '/api/chat'; 
         
-        // The Model. Change this to 'claude-opus-4-6' or whatever you need if it throws an error.
-        const MODEL_NAME = 'gpt-3.5-turbo'; 
+        // Exact model name from your token settings
+        const MODEL_NAME = 'claude-opus-4-6'; 
 
         // Initial Brain Memory
         let messageHistory = [
@@ -124,7 +124,7 @@
             chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
-                // The Heavy Uplink
+                // The Heavy Uplink via Ghost Proxy
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
@@ -149,7 +149,7 @@
                     addMessage(aiReply, false);
                     messageHistory.push({ role: "assistant", content: aiReply });
                 } else if (data.error) {
-                    const errorMsg = data.error.message || 'Check your model restrictions or token balance.';
+                    const errorMsg = data.error.message || 'Check your Ghost Proxy setup or Agent Router dashboard.';
                     addMessage(`[SYSTEM ERROR]: ${errorMsg}`, false);
                 } else {
                     addMessage("[SYSTEM ERROR]: Malformed response from server.", false);
@@ -157,7 +157,7 @@
 
             } catch (error) {
                 document.getElementById(typingId)?.remove();
-                addMessage("[CRITICAL FAILURE]: Connection to Agent Router lost. Check network or API URL.", false);
+                addMessage("[CRITICAL FAILURE]: Cannot reach /api/chat. Make sure your api/chat.js file is pushed to GitHub!", false);
             }
         }
 

@@ -3,149 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSINT Analyzer | By Rakib Bae</title>
+    <title>Extreme OSINT Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            background-color: #050505;
-            color: #00ffcc;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            background-image: radial-gradient(circle, #0a1a10 0%, #000000 100%);
+        body { 
+            background-color: #050505; 
+            color: #00ff41; 
+            font-family: 'Courier New', Courier, monospace; 
         }
-        .container {
-            background: rgba(10, 25, 15, 0.6);
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid #00ffcc;
-            box-shadow: 0 0 25px rgba(0, 255, 204, 0.2);
-            text-align: center;
-            width: 90%;
-            max-width: 500px;
-            backdrop-filter: blur(10px);
+        .glass-panel { 
+            background: rgba(8, 8, 8, 0.95); 
+            border: 1px solid #00ff41; 
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.15); 
         }
-        h1 {
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px #00ffcc;
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { 
+            background-color: #00ff41; 
+            border-radius: 10px; 
         }
-        p {
-            color: #55aa88;
-            font-size: 14px;
-            margin-bottom: 20px;
+        .glow-text { text-shadow: 0 0 8px #00ff41; }
+        .user-msg { 
+            background: rgba(0, 255, 65, 0.08); 
+            border-left: 2px solid #00ff41; 
+            color: #e0ffe0; 
         }
-        input[type="email"] {
-            width: 85%;
-            padding: 12px;
-            margin-bottom: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid #005544;
-            color: #00ffcc;
-            border-radius: 8px;
-            font-size: 16px;
-            outline: none;
-            text-align: center;
-        }
-        button {
-            background: transparent;
-            color: #00ffcc;
-            border: 2px solid #00ffcc;
-            padding: 10px 25px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-        }
-        button:hover {
-            background: #00ffcc;
-            color: #000;
-            box-shadow: 0 0 20px #00ffcc;
-        }
-        .terminal {
-            margin-top: 20px;
-            background: #000;
-            border: 1px solid #00ffcc;
-            padding: 15px;
-            border-radius: 5px;
-            height: 180px;
-            overflow-y: auto;
-            text-align: left;
-            font-size: 13px;
-            color: #00ffcc;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            box-shadow: inset 0 0 10px #00ffcc33;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #336655;
+        .ai-msg { 
+            background: rgba(0, 168, 255, 0.05); 
+            border-right: 2px solid #00a8ff; 
+            color: #82ccdd; 
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>OSINT Analyzer</h1>
-        <p>Advanced Digital Footprint Tracker</p>
+<body class="h-screen flex flex-col items-center justify-center p-2 sm:p-4 selection:bg-green-900 selection:text-white">
+    
+    <div class="glass-panel w-full max-w-3xl h-[95vh] flex flex-col rounded-xl overflow-hidden relative">
         
-        <input type="email" id="targetEmail" placeholder="Enter Target Email...">
-        <button id="scanBtn">Initiate Scan</button>
-        
-        <div class="terminal" id="outputBox">System Ready... Waiting for target.</div>
-        
-        <div class="footer">Developed by Rakib Bae | System Ready</div>
+        <div class="p-4 border-b border-[#00ff41] flex justify-between items-center bg-black/60 backdrop-blur-md">
+            <h1 class="text-xl sm:text-2xl font-bold glow-text tracking-widest">SYSTEM_CORE<span class="animate-pulse">_</span></h1>
+            <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#00ff41]"></span>
+                <span class="text-[10px] sm:text-xs text-green-400/80 tracking-widest">SECURE UPLINK</span>
+            </div>
+        </div>
+
+        <div id="chat-box" class="flex-1 p-4 overflow-y-auto custom-scrollbar flex flex-col space-y-4">
+            <div class="ai-msg p-3 rounded-lg self-start max-w-[85%] text-sm shadow-sm leading-relaxed">
+                [+] Neural link established.<br>
+                [+] Agent Router connected securely.<br>
+                [+] Awaiting your command sequence...
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-[#00ff41] bg-black/90">
+            <div class="flex space-x-2 sm:space-x-3">
+                <input type="text" id="user-input" 
+                    class="flex-1 bg-black/50 border border-[#00ff41]/50 text-[#00ff41] rounded-lg p-3 outline-none focus:ring-1 focus:ring-[#00ff41] focus:border-[#00ff41] transition-all placeholder-green-900/60 font-bold tracking-wide"
+                    placeholder="Enter command..." autocomplete="off">
+                <button id="send-btn" 
+                    class="bg-[#00ff41] text-black px-4 sm:px-6 py-3 rounded-lg font-bold hover:bg-white hover:text-black transition-all shadow-[0_0_15px_rgba(0,255,65,0.4)] tracking-wider">
+                    EXECUTE
+                </button>
+            </div>
+        </div>
     </div>
 
-    <!-- ডাইরেক্ট ওএসআইএনটি এপিআই (হাগিং ফেস ছাড়া) -->
     <script>
-        document.getElementById('scanBtn').addEventListener('click', async () => {
-            const emailInput = document.getElementById('targetEmail').value;
-            const outputBox = document.getElementById('outputBox');
-            const btn = document.getElementById('scanBtn');
+        // DOM Elements
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
 
-            if(!emailInput) {
-                outputBox.innerText = "[-] Error: Target email is missing!";
-                return;
+        // ==========================================
+        // EXTREME CONFIGURATION BLOCK
+        // ==========================================
+        
+        // Your Secret API Key
+        const API_KEY = 'sk-HZkaiZ8fBlKhr15wSUa8ROJXeQS6A32FHZt2HA0VCUhmoaNf'; 
+        
+        // Exact Agent Router Endpoint
+        const API_URL = 'https://agentrouter.org/v1/chat/completions'; 
+        
+        // The Model. Change this to 'claude-opus-4-6' or whatever you need if it throws an error.
+        const MODEL_NAME = 'gpt-3.5-turbo'; 
+
+        // Initial Brain Memory
+        let messageHistory = [
+            { 
+                role: "system", 
+                content: "You are a highly advanced OSINT tool and extremely intelligent AI terminal. Provide direct, powerful, and highly accurate information. Respond with extreme confidence." 
             }
+        ];
 
-            outputBox.innerText = "[*] Initiating DIRECT OSINT scan...\n[*] Bypassing external servers...\n[*] Checking Data Breaches for: " + emailInput + "\n\n(Wait 2-3 seconds...)";
-            btn.innerText = "Scanning...";
-            btn.disabled = true;
+        // UI Updater Function
+        function addMessage(text, isUser) {
+            const div = document.createElement('div');
+            div.className = `p-3 rounded-lg max-w-[85%] text-sm leading-relaxed ${isUser ? 'user-msg self-end' : 'ai-msg self-start'}`;
+            // Preserve line breaks
+            div.innerHTML = text.replace(/\n/g, '<br>');
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Core Execution Logic
+        async function executeCommand() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // Display User Message
+            addMessage(`> ${text}`, true);
+            userInput.value = '';
+            messageHistory.push({ role: "user", content: text });
+
+            // Create Typing Indicator
+            const typingId = 'typing-' + Date.now();
+            const typingDiv = document.createElement('div');
+            typingDiv.id = typingId;
+            typingDiv.className = "ai-msg p-3 rounded-lg self-start text-sm animate-pulse opacity-70";
+            typingDiv.innerText = "Processing data stream...";
+            chatBox.appendChild(typingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
-                // হাগিং ফেসের বদলে ডাইরেক্ট ডার্ক ওয়েব ডেটাবেসে হিট!
-                const breachResponse = await fetch("https://api.xposedornot.com/v1/check-email/" + emailInput);
-                
-                let finalResult = "[*] Scan Complete for: " + emailInput + "\n\n";
+                // The Heavy Uplink
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: MODEL_NAME,
+                        messages: messageHistory,
+                        max_tokens: 2000,
+                        temperature: 0.7
+                    })
+                });
 
-                if (breachResponse.status === 404) {
-                    finalResult += "[+] STATUS: SECURE ✅\n[+] No data breaches found on the dark web or public leaks.\n[+] This email is completely safe.";
-                } else if (breachResponse.status === 200) {
-                    const data = await breachResponse.json();
-                    if(data.breaches && data.breaches[0]) {
-                        const leaks = data.breaches[0].join(", ");
-                        finalResult += "[!!!] DANGER: DATA BREACH DETECTED ❌\n[!] This email's data was leaked in the following breaches:\n\n=> " + leaks;
-                    }
+                const data = await response.json();
+                
+                // Remove Typing Indicator
+                document.getElementById(typingId)?.remove();
+
+                if (data.choices && data.choices.length > 0) {
+                    const aiReply = data.choices[0].message.content;
+                    addMessage(aiReply, false);
+                    messageHistory.push({ role: "assistant", content: aiReply });
+                } else if (data.error) {
+                    const errorMsg = data.error.message || 'Check your model restrictions or token balance.';
+                    addMessage(`[SYSTEM ERROR]: ${errorMsg}`, false);
                 } else {
-                    finalResult += "[-] Database server is busy. Try again later.";
+                    addMessage("[SYSTEM ERROR]: Malformed response from server.", false);
                 }
 
-                outputBox.innerText = finalResult;
-                
             } catch (error) {
-                outputBox.innerText = "[-] Scan Failed!\nMake sure you have an active internet connection.";
+                document.getElementById(typingId)?.remove();
+                addMessage("[CRITICAL FAILURE]: Connection to Agent Router lost. Check network or API URL.", false);
             }
+        }
 
-            btn.innerText = "Initiate Scan";
-            btn.disabled = false;
+        // Event Listeners
+        sendBtn.addEventListener('click', executeCommand);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') executeCommand();
         });
+        
+        // Auto-focus input on load
+        userInput.focus();
     </script>
 </body>
 </html>

@@ -103,7 +103,7 @@
         <div class="footer">Developed by Rakib Bae | System Ready</div>
     </div>
 
-    <!-- ডাইরেক্ট API কানেকশন (No External JS) -->
+    <!-- ডাইরেক্ট ওএসআইএনটি এপিআই (হাগিং ফেস ছাড়া) -->
     <script>
         document.getElementById('scanBtn').addEventListener('click', async () => {
             const emailInput = document.getElementById('targetEmail').value;
@@ -115,41 +115,32 @@
                 return;
             }
 
-            outputBox.innerText = "[*] Initiating override protocol...\n[*] Forcing direct connection to Hugging Face...\n[*] Hunting data for: " + emailInput + "\n\n(Wait 5-15 seconds...)";
+            outputBox.innerText = "[*] Initiating DIRECT OSINT scan...\n[*] Bypassing external servers...\n[*] Checking Data Breaches for: " + emailInput + "\n\n(Wait 2-3 seconds...)";
             btn.innerText = "Scanning...";
             btn.disabled = true;
 
             try {
-                // লেটেস্ট Gradio API (4.x) পাইপলাইন
-                let response = await fetch("https://rakibgg-osint-backend.hf.space/run/predict", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ data: [emailInput] })
-                });
-
-                // যদি ওপরেরটা ফেইল করে, তাহলে পুরোনো (3.x) API তে ট্রাই করবে
-                if (!response.ok) {
-                    response = await fetch("https://rakibgg-osint-backend.hf.space/api/predict", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ data: [emailInput] })
-                    });
-                }
-
-                if (!response.ok) {
-                    throw new Error("Server sleeping or endpoint missed (Status: " + response.status + ")");
-                }
-
-                const result = await response.json();
+                // হাগিং ফেসের বদলে ডাইরেক্ট ডার্ক ওয়েব ডেটাবেসে হিট!
+                const breachResponse = await fetch("https://api.xposedornot.com/v1/check-email/" + emailInput);
                 
-                if (result.data && result.data[0]) {
-                    outputBox.innerText = result.data[0];
+                let finalResult = "[*] Scan Complete for: " + emailInput + "\n\n";
+
+                if (breachResponse.status === 404) {
+                    finalResult += "[+] STATUS: SECURE ✅\n[+] No data breaches found on the dark web or public leaks.\n[+] This email is completely safe.";
+                } else if (breachResponse.status === 200) {
+                    const data = await breachResponse.json();
+                    if(data.breaches && data.breaches[0]) {
+                        const leaks = data.breaches[0].join(", ");
+                        finalResult += "[!!!] DANGER: DATA BREACH DETECTED ❌\n[!] This email's data was leaked in the following breaches:\n\n=> " + leaks;
+                    }
                 } else {
-                    outputBox.innerText = "[-] Error: Data missing from server.\nResponse: " + JSON.stringify(result);
+                    finalResult += "[-] Database server is busy. Try again later.";
                 }
+
+                outputBox.innerText = finalResult;
                 
             } catch (error) {
-                outputBox.innerText = "[-] System Error / Connection Blocked!\nDetails: " + error.message + "\n\n[!] মামা, হাগিং ফেসের সার্ভার হয়তো স্লিপ মোডে আছে। একবার huggingface.co তে গিয়ে স্পেসটা 'Running' আছে কি না দেখে নে।";
+                outputBox.innerText = "[-] Scan Failed!\nMake sure you have an active internet connection.";
             }
 
             btn.innerText = "Initiate Scan";
